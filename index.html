@@ -1,0 +1,137 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+	<title>nmaisonneuve/gmail-scraper-gem @ GitHub</title>
+	
+	<style type="text/css">
+		body {
+  		margin-top: 1.0em;
+  		background-color: #09c2de;
+		  font-family: "Helvetica,Arial,FreeSans"; 
+  		color: #000000;
+    }
+    #container {
+      margin: 0 auto;
+      width: 700px;
+    }
+		h1 { font-size: 3.8em; color: #f63d21; margin-bottom: 3px; }
+		h1 .small { font-size: 0.4em; }
+		h1 a { text-decoration: none }
+		h2 { font-size: 1.5em; color: #f63d21; }
+    h3 { text-align: center; color: #f63d21; }
+    a { color: #f63d21; }
+    .description { font-size: 1.2em; margin-bottom: 30px; margin-top: 30px; font-style: italic;}
+    .download { float: right; }
+		pre { background: #000; color: #fff; padding: 15px;}
+    hr { border: 0; width: 80%; border-bottom: 1px solid #aaa}
+    .footer { text-align:center; padding-top:30px; font-style: italic; }
+	</style>
+	
+</head>
+
+<body>
+  <a href="http://github.com/nmaisonneuve/gmail-scraper-gem"><img style="position: absolute; top: 0; right: 0; border: 0;" src="http://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub" /></a>
+  
+  <div id="container">
+
+    <div class="download">
+      <a href="http://github.com/nmaisonneuve/gmail-scraper-gem/zipball/master">
+        <img border="0" width="90" src="http://github.com/images/modules/download/zip.png"></a>
+      <a href="http://github.com/nmaisonneuve/gmail-scraper-gem/tarball/master">
+        <img border="0" width="90" src="http://github.com/images/modules/download/tar.png"></a>
+    </div>
+      
+    <h1><a href="http://github.com/nmaisonneuve/gmail-scraper-gem">gmail-scraper-gem</a> 
+      <span class="small">by <a href="http://github.com/nmaisonneuve">nmaisonneuve</a></span></h1>
+
+    <div class="description">
+      (Fast) Gmail's scraper to extract conversations and emails 
+
+    </div>
+
+    <p>HTML Scraper to extract a summary of Gmail conversations or/and also the emails inside.
+
+## Description
+HTML Scraper to extract a summary of the conversations or/and also the emails inside.
+
+## Features
+ * Fast method to extract gmail's data compared to SMTP/IMAP = we don't download attached files etc.   
+ * extract the list of summaries of each conversation
+ * extract the emails of each conversation (email text = only the new text due to Gmail Diff method)
+
+## Problems
+ * too fast.. : If you extract all your emails (thousand of conversations) in few minutes, Gmail could detect an "abnormal behavior" and block your account for 24h if you.
+  To solve that use sleep(n) method sometimes in your iterative block.
+
+## Examples code
+
+    gmail=Gmail.new("email","password")
+    if gmail.connect
+     conv_start=10 # start the extract at the conversation index =0
+     conv_end= nil # no specific conversation index for the end of the interval
+     gmail.list(conv_start, conv_end) {|thread_summary|
+
+        # a summary of a conversation
+        thread_summary.subject
+        thread_summary.nb_emails
+        thread_summary.uid
+        thread_summary.tags
+
+        # a complete conversation
+        thread=gmail.fetch_conversation(thread_summary) # scrapt the whole conversation (=with the emails inside) from its summary
+        thread.created_at
+        thread.updated_at
+        thread.subject
+        thread.nb_emails
+        thread.uid
+        thread.tags
+
+        #an email in the conversation
+        email=thread.emails[0]
+        email.uid
+        email.sender
+        emails.receivers
+        email.created_at
+        email.text    #= only the new text
+        email.subject #= subject of the conversation
+
+     }
+
+    end
+
+ #  TODO
+ * search criteria
+ * multi-thread scraping</p><h2>Dependencies</h2>
+<p>mechanize >= 0.9.3</p>
+<h2>Install</h2>
+<p>sudo gem install gmail-scraper</p>
+<h2>Authors</h2>
+<p>Nicolas Maisonneuve (n.maisonneuve@gmail.com)<br/><br/>      </p>
+<h2>Contact</h2>
+<p>Nicolas Maisonenuve (n.maisonneuve@gmail.com)<br/>      </p>
+
+
+    <h2>Download</h2>
+    <p>
+      You can download this project in either
+      <a href="http://github.com/nmaisonneuve/gmail-scraper-gem/zipball/master">zip</a> or
+      <a href="http://github.com/nmaisonneuve/gmail-scraper-gem/tarball/master">tar</a> formats.
+    </p>
+    <p>You can also clone the project with <a href="http://git-scm.com">Git</a>
+      by running:
+      <pre>$ git clone git://github.com/nmaisonneuve/gmail-scraper-gem</pre>
+    </p>
+      
+    <div class="footer">
+      get the source code on GitHub : <a href="http://github.com/nmaisonneuve/gmail-scraper-gem">nmaisonneuve/gmail-scraper-gem</a>
+    </div>
+    
+  </div>
+
+  
+</body>
+</html>
