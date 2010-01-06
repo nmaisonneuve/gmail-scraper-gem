@@ -1,8 +1,6 @@
 # Install
  sudo gem install gmail-scraper
 
-## Author
- * Nicolas Maisonneuve
 
 ## Description
 HTML Scraper to extract a summary of the conversations or/and also the emails inside.
@@ -51,3 +49,7 @@ HTML Scraper to extract a summary of the conversations or/and also the emails in
      }
 
     end
+
+ #  TODO
+ * search criteria
+ * multi-thread scraping
