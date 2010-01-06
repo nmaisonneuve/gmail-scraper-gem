@@ -24,11 +24,11 @@ describe Gmail do
 
 
   it "should be able to extract a summary of the first 50 conversations" do
-    email_start=0
-    email_end=1
+    conv_start=0
+    conv_end=49
     @gmail.connect
     i=0
-    @gmail.list(email_start, email_end) { |thread_summary|
+    @gmail.list(conv_start, conv_end) { |thread_summary|
       thread_summary.subject.should_not==nil
       thread_summary.nb_emails.should>=1
       thread_summary.uid.should_not==nil
@@ -36,17 +36,10 @@ describe Gmail do
       
       i+=1
     }
-    i.should==(email_end-email_start+1)
+    i.should==(conv_end-conv_start+1)
   end
 
-  it "should be able only to extract the correct interval of conversations" do
-    i=0
-    @gmail.list(1,2){ |conv_summary|
-      conv=@gmail.fetch_conversation(conv_summary)
-       i+=1
-    }
-    i.should==2
-  end
+
 
   it "should be able to fetch the correct number of emails in a conversations" do
     @gmail.list(500,551){ |conv_summary|        

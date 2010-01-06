@@ -1,0 +1,53 @@
+# Install
+ sudo gem install gmail-scraper
+
+## Author
+ * Nicolas Maisonneuve
+
+## Description
+HTML Scraper to extract a summary of the conversations or/and also the emails inside.
+
+## Features
+ * Fast method to extract gmail's data compared to SMTP/IMAP = we don't download attached files etc.   
+ * extract the list of summaries of each conversation
+ * extract the emails of each conversation (email text = only the new text due to Gmail Diff method)
+
+## Problems
+ * too fast.. : If you extract all your emails (thousand of conversations) in few minutes, Gmail could detect an "abnormal behavior" and block your account for 24h if you.
+  To solve that use sleep(n) method sometimes in your iterative block.
+
+## Examples code
+
+    gmail=Gmail.new("email","password")
+    if gmail.connect
+     conv_start=10 # start the extract at the conversation index =0
+     conv_end= nil # no specific conversation index for the end of the interval
+     gmail.list(conv_start, conv_end) {|thread_summary|
+
+        # a summary of a conversation
+        thread_summary.subject
+        thread_summary.nb_emails
+        thread_summary.uid
+        thread_summary.tags
+
+        # a complete conversation
+        thread=gmail.fetch_conversation(thread_summary) # scrapt the whole conversation (=with the emails inside) from its summary
+        thread.created_at
+        thread.updated_at
+        thread.subject
+        thread.nb_emails
+        thread.uid
+        thread.tags
+
+        #an email in the conversation
+        email=thread.emails[0]
+        email.uid
+        email.sender
+        emails.receivers
+        email.created_at
+        email.text    #= only the new text
+        email.subject #= subject of the conversation
+
+     }
+
+    end
