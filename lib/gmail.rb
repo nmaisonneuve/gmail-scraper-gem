@@ -1,7 +1,7 @@
 require 'rubygems'
 require 'mechanize'
-require 'conversation.rb'
-require 'email.rb'
+require 'lib/conversation.rb'
+require 'lib/email.rb'
 
 
 class ThreadNotFoundException<Exception
@@ -13,7 +13,6 @@ class Gmail
   XPATH_CONV_IN_LIST="//tr[@bgcolor='#E8EEF7'] | //tr[@bgcolor='#ffffff']"
   XPATH_EMAIL_IN_CONV=".//table[@bgcolor='#efefef' and @border='0']"
 
-  
 
   def initialize(email, pwd)
     @email=email
@@ -24,30 +23,32 @@ class Gmail
   def connect
     base_url="http://www.gmail.com"
     @agent = WWW::Mechanize.new
+    @agent.follow_meta_refresh = true
     base_page = @agent.get base_url
     login_form = base_page.forms.first
     login_form.Email = @email
     login_form.Passwd = @pwd
     @agent.submit(login_form)
-    page= @agent.get "http://mail.google.com/mail/?ui=html&zy=a&s=a"
+    page= @agent.get "http://mail.google.com/mail/?ui=html&zy=a"
 
     # bad(but working) method to detect the connection
-    connected=!(page.title.gsub("\n", "").strip=="Gmail: Email from Google")
+    connected=!(page.title[/Inbox/].nil?)
 
     return connected
   end
 
   # Scrap the list of summaries of conversations
 
+  def search(tag, conv_start=0, conv_end=nil)
+    summary_as_html("s=l&l=#{tag}", conv_start, conv_end){|html_conv, i|
+      yield(html_conv, i)
+    }
+  end
+
   def list(conv_start=0, conv_end=nil)
     # display the list of emails
-    summary_as_html(conv_start, conv_end){|html_conv, i|
-        begin
-            c=ConvSummary.create_from_html(html_conv)
-          yield(c)
-        rescue DraftException
-          puts "Skiping a draft"
-        end
+    summary_as_html("s=a", conv_start, conv_end){|html_conv, i|
+
 
     }
   end
@@ -64,14 +65,16 @@ class Gmail
 
   private
 
-  def summary_as_html(conv_start, conv_end)
+
+  def summary_as_html(mode, conv_start, conv_end)
 
     page_index=conv_start/CONV_PER_PAGE
 
     while (!@error)
 
       # get the page of threads
-      url="?s=a&st=#{page_index*CONV_PER_PAGE}"
+      url="?#{mode}&st=#{page_index*CONV_PER_PAGE}"
+
       puts "fetching page: #{url}"
       page_list=@agent.get url
 
@@ -79,14 +82,18 @@ class Gmail
 
       page_list.search(XPATH_CONV_IN_LIST).each_with_index{|conv, i|
         conv_index=page_index*CONV_PER_PAGE+i
-        puts "conversation_index: #{conv_index}"
 
         if (((!conv_end.nil?) && (conv_index>conv_end)) || @error)
           return
         end
 
         if (conv_index>=conv_start)
-              yield(conv)
+          begin
+            c=ConvSummary.create_from_html(conv)
+            yield(c)
+          rescue DraftException
+            puts "Skiping a draft"
+          end
         end
       }
 

@@ -1,6 +1,6 @@
 spec = Gem::Specification.new do |s|
   s.name = 'gmail-scraper'
-  s.version = '0.1'
+  s.version = '0.2'
   s.summary = "Scrap Gmail's emails from its HTML Version."  
   s.files = Dir['lib/**/*.rb'] + Dir['spec/**/*.rb']
   s.require_path = 'lib'

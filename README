@@ -1,7 +1,6 @@
 # Install
  sudo gem install gmail-scraper
 
-
 ## Description
 HTML Scraper to extract a summary of the conversations or/and also the emails inside.
 
@@ -20,7 +19,9 @@ HTML Scraper to extract a summary of the conversations or/and also the emails in
     if gmail.connect
      conv_start=10 # start the extract at the conversation index =0
      conv_end= nil # no specific conversation index for the end of the interval
-     gmail.list(conv_start, conv_end) {|thread_summary|
+
+     #default method gmail.list() with conv_start=0
+     gmail.list(conv_start, conv_end) {|thread_summary,i|
 
         # a summary of a conversation
         thread_summary.subject
@@ -50,6 +51,14 @@ HTML Scraper to extract a summary of the conversations or/and also the emails in
 
     end
 
+
+     # for all the emails related to a specific tag 
+     gmail.search(tag) {|thread_summary,i|
+        ...
+     }
+
  #  TODO
- * search criteria
- * multi-thread scraping
+* multi-thread scraping
+
+ # Author
+Nicolas Maisonneuve (n.maisonneuve@gmail.com)

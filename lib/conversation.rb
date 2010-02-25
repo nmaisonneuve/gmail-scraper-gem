@@ -1,4 +1,4 @@
-require 'conv_summary.rb'
+require 'lib/conv_summary.rb'
 class Conversation<ConvSummary
 
   attr_accessor :created_at, :emails
