@@ -1,4 +1,5 @@
-require 'lib/conv_summary.rb'
+require 'gmail/conv_summary.rb'
+
 class Conversation<ConvSummary
 
   attr_accessor :created_at, :emails

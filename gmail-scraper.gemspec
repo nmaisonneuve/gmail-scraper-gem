@@ -1,8 +1,8 @@
 spec = Gem::Specification.new do |s|
   s.name = 'gmail-scraper'
-  s.version = '0.2'
+  s.version = '0.3'
   s.summary = "Scrap Gmail's emails from its HTML Version."  
-  s.files = Dir['lib/**/*.rb'] + Dir['spec/**/*.rb']
+  s.files = Dir['lib/**/*.rb'] + Dir['spec/**/*.rb'] +["README"]
   s.require_path = 'lib'
   s.add_dependency('mechanize', '>= 0.9.3')
   s.author = "Nicolas Maisonneuve"

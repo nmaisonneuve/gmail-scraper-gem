@@ -1,7 +1,8 @@
 require 'rubygems'
 require 'mechanize'
-require 'lib/conversation.rb'
-require 'lib/email.rb'
+require 'gmail/email'
+require 'gmail/conversation'
+require 'gmail/conversation'
 
 
 class ThreadNotFoundException<Exception
